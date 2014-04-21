@@ -5,9 +5,3 @@ module.exports =
 
   activate: (state) ->
     @urlencodeView = new UrlencodeView(state.urlencodeViewState)
-
-  deactivate: ->
-    @urlencodeView.destroy()
-
-  serialize: ->
-    urlencodeViewState: @urlencodeView.serialize()
