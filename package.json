@@ -3,7 +3,10 @@
   "main": "./lib/urlencode",
   "version": "0.0.0",
   "description": "A short description of your package",
-  "activationEvents": ["urlencode:toggle"],
+  "activationEvents": [
+    "urlencode:encode",
+    "urlencode:decode"
+  ],
   "repository": "https://github.com/atom/urlencode",
   "license": "MIT",
   "engines": {

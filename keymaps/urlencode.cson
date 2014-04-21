@@ -8,4 +8,5 @@
 # For more detailed documentation see
 # https://atom.io/docs/latest/advanced/keymaps
 '.workspace':
-  'ctrl-alt-o': 'urlencode:toggle'
+  'ctrl-alt-e': 'urlencode:encode'
+  'ctrl-alt-d': 'urlencode:decode'
