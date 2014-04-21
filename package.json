@@ -10,5 +10,6 @@
     "atom": ">0.50.0"
   },
   "dependencies": {
+    "urlencode": "0.1.2"
   }
 }
