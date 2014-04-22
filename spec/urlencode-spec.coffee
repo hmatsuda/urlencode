@@ -1,29 +1,43 @@
+{WorkspaceView} = require 'atom'
 Urlencode = require '../lib/urlencode'
 
-# Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
-#
-# To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
-# or `fdescribe`). Remove the `f` to unfocus the block.
-
 describe "Urlencode", ->
-  activationPromise = null
+  [activationPromise, editor, editorView] = []
+
+  encode = (callback) ->
+    editorView.trigger "urlencode:encode"
+    waitsForPromise -> activationPromise
+    runs(callback)
+
+  decode = (callback) ->
+    editorView.trigger "urlencode:decode"
+    waitsForPromise -> activationPromise
+    runs(callback)
 
   beforeEach ->
     atom.workspaceView = new WorkspaceView
+    atom.workspaceView.openSync()
+
     activationPromise = atom.packages.activatePackage('urlencode')
 
-  describe "when the urlencode:toggle event is triggered", ->
-    it "attaches and then detaches the view", ->
-      expect(atom.workspaceView.find('.urlencode')).not.toExist()
+    editorView = atom.workspaceView.getActiveView()
+    editor = editorView.getEditor()
 
-      # This is an activation event, triggering it will cause the package to be
-      # activated.
-      atom.workspaceView.trigger 'urlencode:toggle'
+    editor.setText """
+      http://www.yahoo.co.jp
+    """
+    editor.setSelectedBufferRange([[0, 0], [0, 22]])
 
-      waitsForPromise ->
-        activationPromise
 
-      runs ->
-        expect(atom.workspaceView.find('.urlencode')).toExist()
-        atom.workspaceView.trigger 'urlencode:toggle'
-        expect(atom.workspaceView.find('.urlencode')).not.toExist()
+  describe "when entire are selected", ->
+    it "urlencodes the selected lines", ->
+      encode ->
+        expect(editor.getText()).toBe """
+          http%3A%2F%2Fwww.yahoo.co.jp
+        """
+
+    it "urldecodes the selected lines", ->
+      decode ->
+        expect(editor.getText()).toBe """
+          http://www.yahoo.co.jp
+        """
